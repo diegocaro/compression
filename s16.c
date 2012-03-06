@@ -18,6 +18,7 @@
 //
 // Copyright (c) 2008, WEST, Polytechnic Institute of NYU
 //
+// This version was coded by Diego Caro, DIICC, Universidad de Concepción, Chile
 
 #include<stdio.h>
 #include<stdlib.h>
