@@ -1,0 +1,6 @@
+This repository contains algorithms to compress sorted integers arrays in C.
+The algorithms already coded are:
+ - Simple16
+ - PForDelta
+
+More info on the header of each .c file.
