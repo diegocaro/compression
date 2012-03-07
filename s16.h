@@ -1,5 +1,5 @@
-#ifndef S16_H_GUARD
-#define S16_H_GUARD
+#ifndef S16_H_
+#define S16_H_
 
 int s16_compress(unsigned int*, unsigned int*, int);
 int s16_encode(unsigned int*, unsigned int*, unsigned int);

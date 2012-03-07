@@ -53,6 +53,14 @@ int cnum[16] = {28, 21, 21, 21, 14, 9, 8, 7, 6, 6, 5, 5, 4, 3, 2, 1};
 // Returns:
 //    the number of compressed integers
 //
+// Idea of compress algorithm:
+//
+// - do the next 28 numbers fit into one bit each?
+//   - if yes: use that case 
+//   - if no: do the next 21 numbers fits in an array of 7 integers of 2 bits and 14 integers of 1 bit each?
+//      - if yes: use that case 
+//      - if no: do the next 21 numbers fits in an array of 7 integers of 1 bit and 7 integers 2 bits and 7 integers of 1 bit each?
+//      ... and so on .
 int s16_compress(unsigned int* input, unsigned int* output, int size) {
   int left = size;
   unsigned int* tmp = output;
