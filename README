@@ -4,3 +4,5 @@ The algorithms already coded are:
  - PForDelta
 
 More info on the header of each .c file.
+
+Note: This code is not threads safe.

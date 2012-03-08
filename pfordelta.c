@@ -1,13 +1,62 @@
+////
+// Copyright (c) 2012 Universidad de Concepción, Chile. 
+//
+// Author: Diego Caro
+//
+// @UDEC_LICENSE_HEADER_START@ 
+//
+// @UDEC_LICENSE_HEADER_END@ 
+
+////
+// Copyright (c) 2008, WEST, Polytechnic Institute of NYU
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+//  1. Redistributions of source code must retain the above copyright notice,
+//     this list of conditions and the following disclaimer.
+//  2. Redistributions in binary form must reproduce the above copyright notice,
+//     this list of conditions and the following disclaimer in the documentation
+//     and/or other materials provided with the distribution.
+//  3. Neither the name of WEST, Polytechnic Institute of NYU nor the names
+//     of its contributors may be used to endorse or promote products derived
+//     from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+// Author(s): Torsten Suel, Jiangong Zhang, Jinru He
+//
+// If you have any questions or problems with our code, please contact:
+// jhe@cis.poly.edu
+//
+
+////
 // This is an implementation of PForDelta algorithm for sorted integer arrays.
-// 
+// The PForDelta coding method is fast but compression efficiency is not as good as Rice
+// coding. It is a blockwise coding, so you need to first set the block size to
+// either 32, 64, 128, or 256. The default block size is 128. If the input
+// buffer to the Compression() function is greater in size than the block size,
+// any integers past the block size will be discarded.
+// The meta data is stored as an uncompressed integer written at the beginning
+// of the buffer; it includes the number of bits used per integer, the block
+// size, and the number of integers coded without exceptions.
+//
 // 1. Original algorithm from:
-//   http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.101.3316 and 
-//   http://dx.doi.org/10.1109/ICDE.2006.150
+//     http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.101.3316 and 
+//     http://dx.doi.org/10.1109/ICDE.2006.150
 //
-// Optimizacion from:
-//   http://www2008.org/papers/pdf/p387-zhangA.pdf
-//
-// The idea is compress 
+// 2. Optimizacion from:
+//     http://www2008.org/papers/pdf/p387-zhangA.pdf
 //
 // Alternative implementations:
 //   * C++ http://code.google.com/p/poly-ir-toolkit/source/browse/trunk/src/compression_toolkit/pfor_coding.cc
@@ -16,15 +65,15 @@
 // This code is based on an implementation in C++ of the Poly-IR-Toolkit. 
 // It's available at http://code.google.com/p/poly-ir-toolkit/source/browse/trunk/src/compression_toolkit/pfor_coding.cc
 //
-// Copyright (c) 2008, WEST, Polytechnic Institute of NYU
-//
-// This version was coded by Diego Caro, DIICC, Universidad de Concepción, Chile
 
 #include<stdio.h>
 #include<stdlib.h>
 
-#include "coding.h" //for pack function
+#include "pfordelta.h"
+#include "pack.h" //for pack function
+#include "unpack.h"
 
+extern pf unpack[17]; //array to the unpack functions defined in unpack.h
 
 // from pfor_coding.h
 int b;
@@ -40,10 +89,14 @@ int cnum[17] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,16,20,32};
 
 float FRAC = 0.1; // percent of exceptions in block_size
 
-int pfor_encode(unsigned int **, unsigned int *, int);
-
-unsigned* pfor_decode(unsigned int* _p, unsigned int* _w, int flag);
-
+//
+// Compress an integer array using PForDelta
+// Parameters:
+//    input pointer to the array of integers to compress
+//    output pointer to the array of compressed integers
+//    size (not used)
+// Returns:
+//    the number of 32-bits words used to compress the input
 int pfor_compress(unsigned int *input, unsigned int *output, int size) {
   int flag = -1; // ?
   unsigned int* w;
@@ -149,6 +202,15 @@ int pfor_encode(unsigned int** w, unsigned int* p, int num) {
   return -1;
 }
 
+//
+// Decompress an integer array using PForDelta
+// Parameters:
+//    input pointer to the array of compressed integers to decompress
+//    output pointer to the array of integers
+//    size (not used)
+// Returns:
+//    the number of 32-bits consumed in input
+//
 int pfor_decompress(unsigned int* input, unsigned int* output, int size) {
   unsigned int* tmp = input;
   int flag = *tmp;
@@ -167,10 +229,10 @@ unsigned* pfor_decode(unsigned int* _p, unsigned int* _w, int flag) {
   int i, s;
   unsigned int x;
   
-
   // Esta es una llamada a un arreglo de funciones de unpack.
   // La idea es ahorrarse un if o switch-case por cada una de
   // las funciones que dependenden de unpack_count.
+  // La definición de arreglo unpack[] está en "coding.h"
   // El código equivalente con switch-case sería:
   //   switch(unpack_count) { */
   //     case 0: unpack0(_p, _w, block_size); break;

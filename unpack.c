@@ -1,3 +1,13 @@
+////
+// Copyright (c) 2012 Universidad de Concepción, Chile. 
+//
+// Author: Diego Caro
+//
+// @UDEC_LICENSE_HEADER_START@ 
+//
+// @UDEC_LICENSE_HEADER_END@ 
+
+////
 // Copyright (c) 2008, WEST, Polytechnic Institute of NYU
 //
 // Redistribution and use in source and binary forms, with or without
@@ -23,13 +33,18 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+//
 // Author(s): Torsten Suel, Jiangong Zhang, Jinru He
 //
 // If you have any questions or problems with our code, please contact:
 // jhe@cis.poly.edu
+//
 
 #include "unpack.h"
+
+pf unpack[17] = {unpack0, unpack1, unpack2, unpack3, unpack4, unpack5, unpack6,
+		 unpack7, unpack8, unpack9, unpack10, unpack11, unpack12, unpack13,
+		 unpack16, unpack20, unpack32};
 
 void unpack0(unsigned int* p, unsigned int* w, int BS) {
   int i;

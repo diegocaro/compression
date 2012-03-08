@@ -1,3 +1,13 @@
+////
+// Copyright (c) 2012 Universidad de Concepción, Chile. 
+//
+// Author: Diego Caro
+//
+// @UDEC_LICENSE_HEADER_START@ 
+//
+// @UDEC_LICENSE_HEADER_END@ 
+
+////
 // Copyright (c) 2008, WEST, Polytechnic Institute of NYU
 //
 // Redistribution and use in source and binary forms, with or without
@@ -23,11 +33,12 @@
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+//
 // Author(s): Torsten Suel, Jiangong Zhang, Jinru He
 //
 // If you have any questions or problems with our code, please contact:
 // jhe@cis.poly.edu
+//
 
 #ifndef UNPACK_H_
 #define UNPACK_H_
@@ -49,5 +60,8 @@ void unpack13(unsigned int* p, unsigned int* w, int BS);
 void unpack16(unsigned int* p, unsigned int* w, int BS);
 void unpack20(unsigned int* p, unsigned int* w, int BS);
 void unpack32(unsigned int* p, unsigned int* w, int BS);
+
+// Pointer to a function
+typedef void (*pf)(unsigned int* p, unsigned int* w, int BS);
 
 #endif /* UNPACK_H_ */
