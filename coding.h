@@ -54,4 +54,10 @@ void pack(unsigned int* v, unsigned int b, unsigned int n, unsigned int* w) {
   }
 }
 
+// Pointer to a function
+typedef void (*pf)(unsigned int* p, unsigned int* w, int BS);
+pf unpack[17] = {unpack0, unpack1, unpack2, unpack3, unpack4, unpack5, unpack6,
+		 unpack7, unpack8, unpack9, unpack10, unpack11, unpack12, unpack13,
+		 unpack16, unpack20, unpack32};
+
 #endif /* CODING_H_ */

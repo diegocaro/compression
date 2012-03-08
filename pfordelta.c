@@ -1,11 +1,24 @@
-/// S.Heman.Super-scalardatabasecompressionbetweenRAMandCPU-cache. MS Thesis, Centrum voor Wiskunde en Informatica (CWI), Amsterdam, 2005.
-
-// M. Zukowski, S. Heman, N. Nes, and P. Boncz. Super-scalar RAM-CPU cache compression. In Proc. of the Int. Conf. on Data Engineering, 2006.
-
-// J. Zhang, X. Long, and T. Suel, “Performance of compressed inverted list caching in search engines,” in WWW '08: Proceeding of the 17th international conference on World Wide Web, 2008.
-// Uses this implementation http://www2008.org/papers/pdf/p387-zhangA.pdf
-
-// in java https://github.com/hyan/kamikaze/blob/master/src/main/java/com/kamikaze/pfordelta/PForDelta.java
+// This is an implementation of PForDelta algorithm for sorted integer arrays.
+// 
+// 1. Original algorithm from:
+//   http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.101.3316 and 
+//   http://dx.doi.org/10.1109/ICDE.2006.150
+//
+// Optimizacion from:
+//   http://www2008.org/papers/pdf/p387-zhangA.pdf
+//
+// The idea is compress 
+//
+// Alternative implementations:
+//   * C++ http://code.google.com/p/poly-ir-toolkit/source/browse/trunk/src/compression_toolkit/pfor_coding.cc
+//   * Java https://github.com/hyan/kamikaze/blob/master/src/main/java/com/kamikaze/pfordelta/PForDelta.java
+//
+// This code is based on an implementation in C++ of the Poly-IR-Toolkit. 
+// It's available at http://code.google.com/p/poly-ir-toolkit/source/browse/trunk/src/compression_toolkit/pfor_coding.cc
+//
+// Copyright (c) 2008, WEST, Polytechnic Institute of NYU
+//
+// This version was coded by Diego Caro, DIICC, Universidad de Concepción, Chile
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -13,11 +26,11 @@
 #include "coding.h" //for pack function
 
 
-  // from pfor_coding.h
-  int b;
-  int unpack_count;
-  int t;
-  int start;
+// from pfor_coding.h
+int b;
+int unpack_count;
+int t;
+int start;
 
 int block_size = 128; // can be 32, 64, 128, 256
                       // depende del tamaño del size <64, <128, <256
@@ -28,6 +41,7 @@ int cnum[17] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,16,20,32};
 float FRAC = 0.1; // percent of exceptions in block_size
 
 int pfor_encode(unsigned int **, unsigned int *, int);
+
 unsigned* pfor_decode(unsigned int* _p, unsigned int* _w, int flag);
 
 int pfor_compress(unsigned int *input, unsigned int *output, int size) {
@@ -135,8 +149,6 @@ int pfor_encode(unsigned int** w, unsigned int* p, int num) {
   return -1;
 }
 
-
-
 int pfor_decompress(unsigned int* input, unsigned int* output, int size) {
   unsigned int* tmp = input;
   int flag = *tmp;
@@ -156,29 +168,16 @@ unsigned* pfor_decode(unsigned int* _p, unsigned int* _w, int flag) {
   unsigned int x;
   
 
-  // This can be improved... :)
-  //(unpack[unpack_count])(_p, _w, block_size);
-
-  switch(unpack_count) {
-  case 0: unpack0(_p, _w, block_size); break;
-  case 1: unpack1(_p, _w, block_size); break;
-  case 2: unpack2(_p, _w, block_size); break;
-  case 3: unpack3(_p, _w, block_size); break;
-  case 4: unpack4(_p, _w, block_size); break;
-  case 5: unpack5(_p, _w, block_size); break;
-  case 6: unpack6(_p, _w, block_size); break;
-  case 7: unpack7(_p, _w, block_size); break;
-  case 8: unpack8(_p, _w, block_size); break;
-  case 9: unpack9(_p, _w, block_size); break;
-  case 10: unpack10(_p, _w, block_size); break;
-  case 11: unpack11(_p, _w, block_size); break;
-  case 12: unpack12(_p, _w, block_size); break;
-  case 13: unpack13(_p, _w, block_size); break;
-  case 16: unpack16(_p, _w, block_size); break;
-  case 20: unpack20(_p, _w, block_size); break;
-  case 32: unpack32(_p, _w, block_size); break;
-  }
-
+  // Esta es una llamada a un arreglo de funciones de unpack.
+  // La idea es ahorrarse un if o switch-case por cada una de
+  // las funciones que dependenden de unpack_count.
+  // El código equivalente con switch-case sería:
+  //   switch(unpack_count) { */
+  //     case 0: unpack0(_p, _w, block_size); break;
+  //     case 1: unpack1(_p, _w, block_size); break;
+  //     ...
+  //     case n: unpack...; break; }
+  (unpack[unpack_count])(_p, _w, block_size);
 
   _w += ((b * block_size) >> 5);
 
