@@ -76,10 +76,10 @@
 extern pf unpack[17]; //array to the unpack functions defined in unpack.h
 
 // from pfor_coding.h
-int b;
-int unpack_count;
-int t;
-int start;
+int b;  // b size
+int unpack_count; // 
+int t; // code for exception size in bits
+int start; // first exception
 
 int block_size = 128; // can be 32, 64, 128, 256
                       // depende del tamaño del size <64, <128, <256
