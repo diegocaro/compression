@@ -82,7 +82,7 @@ unsigned int cbits[16][28] =
     {14,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
     {28,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} };
 
-int cnum[16] = {28, 21, 21, 21, 14, 9, 8, 7, 6, 6, 5, 5, 4, 3, 2, 1};
+int s16_cnum[16] = {28, 21, 21, 21, 14, 9, 8, 7, 6, 6, 5, 5, 4, 3, 2, 1};
 
 //
 // Compress an integer array using Simple16
@@ -121,7 +121,7 @@ int s16_encode(unsigned int* _w, unsigned int* _p, unsigned int m) {
 
   for (_k = 0; _k < 16; _k++) {
     (*_w) = _k << 28;
-    _m = (cnum[_k] < m) ? cnum[_k] : m;
+    _m = (s16_cnum[_k] < m) ? s16_cnum[_k] : m;
 
     for (_j = 0, _o = 0; (_j < _m) && (*(_p + _j) < (unsigned int) (1 << cbits[_k][_j]));) {
       (*_w) += ((*(_p + _j)) << _o);
@@ -522,35 +522,6 @@ int s16_decode(unsigned int *_w, unsigned int *_p) {
       _p++;
       break;
   }
-  return cnum[_k];
+  return s16_cnum[_k];
 }
-
-
-// Example of usage
-int main(int argc, char *argv[]) {
-  unsigned int input[] = {2322231,2,3,4,5,6,7,8,9,10};
-  unsigned int *coded;
-  unsigned int *output;
-
-  int size = 10;
-  int newsize;
-  int finalsize;
-  int i;
-
-  coded = (unsigned int *) malloc( size * sizeof(unsigned int) );
-  output = (unsigned int *) malloc( size * sizeof(unsigned int) );
-  //printf("coded = %X\n", coded);
-  //printf("output = %X\n", output);
-  newsize = s16_compress(input, coded, size);
-  finalsize = s16_decompress(coded, output, size);
-
-  printf("Normal size: %d\n", size);
-  printf("Compress size: %d\n", newsize);
-  printf("Consumed size: %d\n", finalsize);
-  for(i = 0; i < size; i++) {
-    printf("%u -> %X -> %u\n", input[i], coded[i], output[i]);
-  }
-  return 0;
-}
-
 

@@ -85,7 +85,7 @@ int block_size = 128; // can be 32, 64, 128, 256
                       // depende del tamaño del size <64, <128, <256
 
 //All possible values of b in the PForDelta algorithm
-int cnum[17] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,16,20,32};
+int pfor_cnum[17] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,16,20,32};
 
 float FRAC = 0.1; // percent of exceptions in block_size
 
@@ -122,7 +122,7 @@ int pfor_encode(unsigned int** w, unsigned int* p, int num) {
   // s
   int i, l, n, bb, t, s;
   unsigned int m; // largest number in sequence
-  int b = cnum[num + 2]; // the b value in pfordelta :)
+  int b = pfor_cnum[num + 2]; // the b value in pfordelta :)
   int start;  // first exception ;)
 
   unsigned int out[block_size]; // array for non-exceptions
@@ -215,7 +215,7 @@ int pfor_decompress(unsigned int* input, unsigned int* output, int size) {
   unsigned int* tmp = input;
   int flag = *tmp;
   
-  b = cnum[((flag >> 12) & 15) + 2];
+  b = pfor_cnum[((flag >> 12) & 15) + 2];
   unpack_count = ((flag >> 12) & 15) + 2;
   t = (flag >> 10) & 3;
   start = flag & 1023;
@@ -280,30 +280,4 @@ unsigned* pfor_decode(unsigned int* _p, unsigned int* _w, int flag) {
 }
 
 
-// Example of usage
-int main(int argc, char *argv[]) {
-  //unsigned int input[] = {2322231,2,3,4,5,6,7,8,9,10};
-  unsigned int input[128] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,10,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,10,10,10,10,10,10,10,10};
-  unsigned int *coded;
-  unsigned int *output;
 
-  int size = 128;
-  int newsize;
-  int finalsize;
-  int i;
-
-  coded = (unsigned int *) malloc( size * sizeof(unsigned int) );
-  output = (unsigned int *) malloc( size * sizeof(unsigned int) );
-  //printf("coded = %X\n", coded);
-  //printf("output = %X\n", output);
-  newsize = pfor_compress(input, coded, size);
-  finalsize = pfor_decompress(coded, output, size);
-
-  printf("Normal size: %d\n", size);
-  printf("Compress size: %d\n", newsize);
-  printf("Consumed size: %d\n", finalsize);
-  for(i = 0; i < size; i++) {
-    printf("%u -> %X -> %u\n", input[i], coded[i], output[i]);
-  }
-  return 0;
-}
