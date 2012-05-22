@@ -1,9 +1,12 @@
 CC=gcc
-CFLAGS=-Wall
+CFLAGS=-Wall -O9
 LDFLAGS=
-SOURCES=howtouse.c  pack.c      pfordelta.c s16.c       unpack.c
+SOURCES=howtouse.c pack.c pfordelta.c s16.c unpack.c coding_policy.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=howtouse
+
+debug: CFLAGS+=-g
+debug: LDFLAGS+=-g
 
 all: $(SOURCES) $(EXECUTABLE)
 	
