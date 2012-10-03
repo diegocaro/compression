@@ -2,6 +2,8 @@
 #include"pfordelta.h"
 #include"coding_policy.h"
 
+extern int block_size;
+
 // The 'input' array size should be at least an upper multiple of 'block_size_'.
 int compress_pfordelta(unsigned int *input, unsigned int *output, int num_input_elements, int block_size_) {
   int num_whole_blocks = num_input_elements / block_size_;
@@ -11,6 +13,8 @@ int compress_pfordelta(unsigned int *input, unsigned int *output, int num_input_
   int left_to_encode;
   int pad_until;
   int i;
+
+  block_size = block_size_;
 
   while (num_whole_blocks-- > 0) {
     encoded_offset += pfor_compress(input + unencoded_offset, output + encoded_offset, block_size_);
@@ -40,6 +44,8 @@ int decompress_pfordelta(unsigned int* input, unsigned int* output, int num_inpu
   int encoded_offset = 0;
   int unencoded_offset = 0;
   int left_to_encode;
+
+  block_size = _block_size;
 
   //printf("num_input_elements: %d\n", num_input_elements);
   while (num_whole_blocks-- > 0) {

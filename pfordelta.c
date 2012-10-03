@@ -127,7 +127,9 @@ int pfor_encode(unsigned int** w, unsigned int* p, int num) {
 
   unsigned int out[block_size]; // array for non-exceptions
   unsigned int ex[block_size]; // array for exceptions
-
+  
+  //printf("unsing b = %d bits\n",b);
+  
   // All numbers in 32bit code, worst case
   if (b == 32) {
     for (i = 0; i < block_size; i++) {
@@ -154,6 +156,8 @@ int pfor_encode(unsigned int** w, unsigned int* p, int num) {
     bb = 32;
     t = 2;
   }
+
+  //printf("using %d bits for exceptions\n",bb);
 
   // Selecting exceptions and non-exceptions
   for (start = 0, n = 0, l = -1, i = 0; i < block_size; i++) {
