@@ -28,7 +28,7 @@ void print_binary(unsigned int num) {
 void test_compression() {
   int num_blocks = 2;
   int size = 130;
-  unsigned int ay[130] = {9,100,1,1,1,1,1,9,1,1,1,1,1,1,1,1,3,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,10,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,3};
+  unsigned int ay[130] = {1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0};
   unsigned int *array=NULL;
   unsigned int *decompressor_out=NULL;
   unsigned int *compressor_out=NULL;
@@ -46,7 +46,7 @@ void test_compression() {
   for(i = 0; i < a; i++) {
     //print_binary(compressor_out[i]);
   }
-
+  printf("space used by pfordelta: %d\n", a);
   free(compressor_out);
   free(array);
   return;
@@ -78,13 +78,13 @@ void test_pfordelta() {
   output = (unsigned int *) malloc( size * sizeof(unsigned int) );
   //printf("coded = %X\n", coded);
   //printf("output = %X\n", output);
-  newsize = pfor_compress(input, coded, size);
-  finalsize = pfor_decompress(coded, output, size);
+  newsize = compress_pfordelta(input, coded, size, 32);
+  finalsize = decompress_pfordelta(coded, output, size, 32);
 
   printf("Normal size: %d\n", size);
   printf("Compress size: %d\n", newsize);
   printf("Consumed size: %d\n", finalsize);
-  for(i = 0; i < newsize; i++) {
+  for(i = 0; i < size; i++) {
     printf("%u -> %X -> %u\n", input[i], coded[i], output[i]);
   }
 }
@@ -116,8 +116,20 @@ void test_s16() {
 
 // Example of usage
 int main(int argc, char *argv[]) {
-  test_compression();
+  //test_compression();
   //test_pfordelta();
   //test_s16();
+  int i;
+  int a;
+  unsigned int p[128];
+  unsigned int t[128];
+  p[0] = 2;
+  p[1] = 2;
+  p[2] = 3;
+  p[3] = 0xffff;  
+  a = compress_pfordelta(p,t,4,32);
+  
+  printf("new size: %d\n",a);
+  for (i = 0; i < a; i++ ) { print_binary(t[i]); printf("\n"); };
   return 0;
 }
