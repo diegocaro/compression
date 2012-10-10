@@ -122,7 +122,7 @@ int pfor_encode(unsigned int** w, unsigned int* p, int num) {
   // s
   int i, l, n, bb, t, s;
   unsigned int m; // largest number in sequence
-  int b = pfor_cnum[num + 2]; // the b value in pfordelta :)
+  int b = pfor_cnum[num + 1]; // the b value in pfordelta :)
   int start;  // first exception ;)
 
   unsigned int out[block_size]; // array for non-exceptions
@@ -219,8 +219,8 @@ int pfor_decompress(unsigned int* input, unsigned int* output, int size) {
   unsigned int* tmp = input;
   int flag = *tmp;
   
-  b = pfor_cnum[((flag >> 12) & 15) + 2];
-  unpack_count = ((flag >> 12) & 15) + 2;
+  b = pfor_cnum[((flag >> 12) & 15) + 1];
+  unpack_count = ((flag >> 12) & 15) + 1;
   t = (flag >> 10) & 3;
   start = flag & 1023;
 
