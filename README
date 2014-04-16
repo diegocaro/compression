@@ -1,4 +1,6 @@
-This repository contains algorithms to compress sorted integers arrays in C.
+This repository contains algorithms to compress sorted integers arrays in C,
+forked from Poly IR Toolkit http://code.google.com/p/poly-ir-toolkit/
+
 The algorithms already coded are:
  - Simple16
  - PForDelta
